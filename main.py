@@ -15,3 +15,13 @@ app = FastAPI(
     ),
     version="0.1.0",
 )
+
+# Load model at startup
+try:
+    bundle = joblib.load("models/asl_svm.joblib")
+    model = bundle['model']
+    class_names = bundle.get("class_names", None)
+except Exception as e:
+    print("Error loading model:", e)
+    model = None
+    class_names = None
