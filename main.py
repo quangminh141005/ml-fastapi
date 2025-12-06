@@ -25,3 +25,34 @@ except Exception as e:
     print("Error loading model:", e)
     model = None
     class_names = None
+
+
+@app.get("/health")
+def health():
+    if model is None:
+        return {"status": "error", "detail": "Model not found :C"}
+    return {"status": "ok"}
+
+@app.post("/predict")
+def predict(data: ASLKeypoints):
+    if model is None:
+        raist HTTPException(status_code=500, detail="Model not loaded:C")
+
+    # Convert list to array shape (1, 42)
+    x = np.array(data.keypoints, dtype=float).reshape(1, -1)
+
+    # Predict label
+    try:
+        probs = model.predict_proba(x)[0]
+        pred_label = model.predict(x)[0]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Prediction error: {e}")
+
+    # Map classes
+    response = {
+        "predicted_label": str(pred_label),
+        "probabilities": probs.tolist(),
+        "classes": getattr(model, "classes_", None).tolist()
+        if hasattr(model, "classes_") else class_names
+    }
+    return response
