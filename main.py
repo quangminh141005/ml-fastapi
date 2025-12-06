@@ -5,7 +5,8 @@ import numpy as np
 
 # Input schema 
 class ASLKeypoints(BaseModel):
-    keyoints: conlist(float, min_items=42, max_items=42)
+    keyoints: conlist(float, min_length=42, max_length=42)
+
 
 app = FastAPI(
     title="ASL Hand Landmark SVM API",
@@ -36,7 +37,7 @@ def health():
 @app.post("/predict")
 def predict(data: ASLKeypoints):
     if model is None:
-        raist HTTPException(status_code=500, detail="Model not loaded:C")
+        raise HTTPException(status_code=500, detail="Model not loaded:C")
 
     # Convert list to array shape (1, 42)
     x = np.array(data.keypoints, dtype=float).reshape(1, -1)
