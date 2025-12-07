@@ -5,7 +5,7 @@ import numpy as np
 
 # Input schema 
 class ASLKeypoints(BaseModel):
-    keyoints: conlist(float, min_length=42, max_length=42)
+    keypoints: conlist(float, min_length=42, max_length=42)
 
 
 app = FastAPI(
