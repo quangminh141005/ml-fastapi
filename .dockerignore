@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+.env
+.git
+.gitignore
+.ipynb_checkpoints/
+tests/
